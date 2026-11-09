@@ -1,0 +1,25 @@
+{%- comment -%}
+  Lazy-loaded, correctly sized image with width/height so the page does not jump.
+  Also escapes alt text, which fixes titles containing quotes (e.g. 11"x17" Print)
+  breaking the alt attribute.
+  For: vintage themes that load every image eagerly or at one fixed size.
+  Usage:
+    {% render 'responsive-image', image: product.featured_image, alt: product.title, sizes: '(min-width: 750px) 25vw, 50vw' %}
+    Pass eager: true for the first image on the page (hero or main product photo).
+{%- endcomment -%}
+{%- if image -%}
+  {%- liquid
+    assign alt_text = alt | default: image.alt | default: ''
+    assign sizes_attr = sizes | default: '100vw'
+    assign widths = '240,360,540,720,900,1200,1600'
+    assign width_list = widths | split: ','
+  -%}
+  <img
+    src="{{ image | image_url: width: 720 }}"
+    srcset="{%- for w in width_list -%}{%- assign wn = w | plus: 0 -%}{%- if image.width >= wn -%}{{ image | image_url: width: wn }} {{ wn }}w, {% endif -%}{%- endfor -%}{{ image | image_url }} {{ image.width }}w"
+    sizes="{{ sizes_attr }}"
+    width="{{ image.width }}"
+    height="{{ image.height }}"
+    alt="{{ alt_text | escape }}"
+    {% if eager %}fetchpriority="high"{% else %}loading="lazy" decoding="async"{% endif %}>
+{%- endif -%}

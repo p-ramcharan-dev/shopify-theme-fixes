@@ -1,0 +1,19 @@
+{%- comment -%}
+  Shipping and returns summary shown under the add-to-cart button.
+  For: product pages that say nothing about delivery or returns near the buy button.
+  Install: add to snippets/, then under the product form add
+    {% render 'pdp-shipping-returns', shipping_text: 'Ships in 2 business days', returns_text: '30-day returns on unused items' %}
+  The policy links only appear if the policies are filled in under
+  Settings > Policies. Filling those in also creates /policies/shipping-policy
+  and /policies/refund-policy, which several of the audited stores are missing.
+{%- endcomment -%}
+<ul class="pdp-assure" style="list-style:none;margin:1rem 0;padding:.9rem 1rem;border:1px solid rgba(0,0,0,.12);border-radius:8px;display:grid;gap:.4rem;font-size:.95em">
+  <li>
+    <strong>Shipping:</strong> {{ shipping_text | escape }}
+    {%- if shop.shipping_policy.body != blank %} · <a href="{{ shop.shipping_policy.url }}">Details</a>{% endif %}
+  </li>
+  <li>
+    <strong>Returns:</strong> {{ returns_text | escape }}
+    {%- if shop.refund_policy.body != blank %} · <a href="{{ shop.refund_policy.url }}">Details</a>{% endif %}
+  </li>
+</ul>

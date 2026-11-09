@@ -1,0 +1,36 @@
+{%- comment -%}
+  One H1 per page.
+  For: homepages where the logo, collection tiles or featured products are all
+  wrapped in <h1>, which gives search engines and screen readers no clear page title.
+
+  1) Logo in the header section. Only the homepage gets an H1 from the logo;
+     every other page gets its H1 from the page, product or collection title.
+{%- endcomment -%}
+{%- if request.page_type == 'index' -%}
+  <h1 class="site-header__logo" style="margin:0">
+{%- else -%}
+  <div class="site-header__logo">
+{%- endif -%}
+    <a href="{{ routes.root_url }}">
+      {%- if logo -%}
+        <img src="{{ logo | image_url: width: 500 }}" width="{{ logo.width }}" height="{{ logo.height }}" alt="{{ logo.alt | default: shop.name | escape }}">
+      {%- else -%}
+        {{ shop.name }}
+      {%- endif -%}
+    </a>
+{%- if request.page_type == 'index' -%}
+  </h1>
+{%- else -%}
+  </div>
+{%- endif -%}
+
+{%- comment -%}
+  2) In each homepage section file (collection list, featured product, image with
+     text), change the section heading tag from h1 to h2 and keep its class so the
+     styling does not change:
+
+       before:  <h1 class="h3">{{ collection.title }}</h1>
+       after:   <h2 class="h3">{{ collection.title }}</h2>
+
+     Search the theme code for "<h1" and you should end with exactly one per template.
+{%- endcomment -%}
